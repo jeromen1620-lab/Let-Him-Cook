@@ -1,16 +1,32 @@
-from fastapi import FastAPI
-from pydantic import BaseModel
 import os
+from pathlib import Path
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware  # <-- NEW IMPORT
+from pydantic import BaseModel
 from groq import Groq
 from dotenv import load_dotenv
 
-# Load the secret API key from the .env file
-load_dotenv()
+current_dir = Path(__file__).resolve().parent
+env_path = current_dir / ".env"
+load_dotenv(dotenv_path=env_path)
+
+api_key = os.environ.get("GROQ_API_KEY")
+
+if not api_key:
+    raise ValueError(f"🚨 CRITICAL: Could not find GROQ_API_KEY. I looked exactly here: {env_path}")
 
 app = FastAPI()
-client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 
-# Define what data the frontend will send us
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+client = Groq(api_key=api_key)
+
 class RecipeRequest(BaseModel):
     dish: str
 
@@ -25,15 +41,9 @@ async def generate_recipe(request: RecipeRequest):
     """
     
     chat_completion = client.chat.completions.create(
-        messages=[
-            {
-                "role": "user",
-                "content": prompt,
-            }
-        ],
-        model="llama3-8b-8192", # Using LLaMA 3 8B model
-        temperature=0.2, # Keep it low so the AI is strict about the JSON format
+        messages=[{"role": "user", "content": prompt}],
+        model="llama-3.1-8b-instant", # Updated to the latest supported model!
+        temperature=0.2,
     )
     
-    # Return the AI's response to the frontend
     return {"recipe": chat_completion.choices[0].message.content}
