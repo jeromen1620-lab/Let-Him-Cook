@@ -32,7 +32,7 @@ To run this project on your local machine, you will need to start both the backe
 ### 2. Frontend Setup
 1. Open a second terminal and navigate to the frontend folder.
 2. Install the Node modules.
-3.Start the Vite development server:
+3. Start the Vite development server:
 =======
 # Let Him Cook 🍳
 
@@ -67,6 +67,5 @@ To run this project on your local machine, you will need to start both the backe
 ### 2. Frontend Setup
 1. Open a second terminal and navigate to the frontend folder.
 2. Install the Node modules.
-
-3.Start the Vite development server.
+3. Start the Vite development server.
 
