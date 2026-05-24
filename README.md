@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Let Him Cook 🍳
 
 An AI-powered, full-stack web application that turns any dish into an interactive, step-by-step cooking guide. 
